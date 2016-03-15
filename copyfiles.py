@@ -29,8 +29,18 @@ def myCopy1(src,dst):
 
 def myCopy2(src, dst, ignoreList):
 
+    notenter="/User/!/~"  #a string which can never be possible
     for root,dirs,files in os.walk(src):   #walk through the directory
+
+        root = root+'/' #important to have this '/' here for the ignore list, as otherwise, folder name like "Bleh2" would also get ignored along with "Bleh" as substring search would give true for it too.
         os.chdir(root)
+        if ignoreList.has_key(root):
+            notenter=root
+            continue
+
+        if notenter in root:
+            continue
+
         print 'root = ' + root
 
         for hereFiles in files:
