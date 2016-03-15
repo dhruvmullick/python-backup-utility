@@ -12,9 +12,9 @@ user="dhruvmullick"
 src = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/"
 dst = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/destFolder/"
 
-ignoreList = {".pdf":1} #write paths of files, folders and extensions here which we don't want to copy
+# ignoreList = {".pdf":1} #write paths of files, folders and extensions here which we don't want to copy
 # ignoreList = {"/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/gaddaarChetan.py":1}
-ignoreList = {"/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/Bleh/":1}
+ignoreList = {"/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/Bleh":1}
 
 
 # ignoreList={}

@@ -5,7 +5,6 @@ import os
 #better than the default copy2() function, as we can specify the new filename as well.
 def myCopy1(src,dst):
     if os.path.isfile(src): #src is a file.
-        print "lullz"
         if not os.path.exists(dst): #if it is a file then dst folder must exist
             os.mkdir(dst)
         # L=src.rsplit('.',1) #obtain the source and dest path
@@ -15,10 +14,9 @@ def myCopy1(src,dst):
         shutil.copyfile(src,dst)
         return
     try:
-        print "meh"
         shutil.copytree(src, dst)   #copy entire directory. dst directory shouldn't exist already
     except OSError as exc:  #if it is a file. But this doesn't change the name of the file to a new name. So we have created our own function above
-         print "lol"
+         print "Exception occured"
     #     if exc.errno == errno.ENOTDIR:
     #         shutil.copy2(src, dst)
     #     else:
@@ -29,29 +27,25 @@ def myCopy1(src,dst):
 
 def myCopy2(src, dst, ignoreList):
 
-    notenter="/User/!/~"  #a string which can never be possible
+    if(ignoreList.has_key(src)):
+        print '\n-----\nCopied\n-----\n'
+
+
     for root,dirs,files in os.walk(src):   #walk through the directory
 
-        root = root+'/' #important to have this '/' here for the ignore list, as otherwise, folder name like "Bleh2" would also get ignored along with "Bleh" as substring search would give true for it too.
+        dirs[:] = [d for d in dirs if os.path.join(root,d) not in ignoreList] #modify dirs so that you enter only if the subdirectory is not in ignoreList
+
         os.chdir(root)
-        if ignoreList.has_key(root):
-            notenter=root
-            continue
 
-        if notenter in root:
-            continue
-
-        print 'root = ' + root
-
-        for hereFiles in files:
-            if(hereFiles[0]=='.'):   #don't copy hidden files
+        for hereFile in files:
+            if(hereFile[0]=='.'):   #don't copy hidden files
                 continue
 
-            print 'file name = ' + hereFiles
+            print 'file name = ' + hereFile
 
-            temp,ex = hereFiles.rsplit('.',1)
+            temp,ex = hereFile.rsplit('.',1)
             ex='.'+ex
-            srcpath=os.path.join(root,hereFiles)
+            srcpath=os.path.join(root,hereFile)
             dstpath=root.replace(src,dst)+'/'
 
             if(ignoreList.has_key(ex)): #the extension is to be ignored
@@ -59,7 +53,9 @@ def myCopy2(src, dst, ignoreList):
             elif(ignoreList.has_key(srcpath)):   #the file is to be ignored
                 continue
             else:
-                print 'srcpath = ' + srcpath
-                print 'dstpath = ' + dstpath
+                # print 'srcpath = ' + srcpath
+                # print 'dstpath = ' + dstpath
                 myCopy1(srcpath,dstpath)
-                print 'Copied\n'
+
+    print '\n-----\nCopied\n-----\n'
+
