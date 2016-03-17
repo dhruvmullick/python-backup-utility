@@ -30,7 +30,7 @@ def copyBasic(src,dst):
     #
 
 
-#copyFull - copy files from src to dst recursively. If the file is an exception, then ignore it.
+#copyFull - copy files from folder src to dst recursively. If the file is an exception, then ignore it.
 def copyFull(src, dst, ignoreList):
 
     if(ignoreList.has_key(src)):

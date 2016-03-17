@@ -5,6 +5,7 @@ Differentially backup files from src to dst
 import os
 import time
 import shutil
+import copyFiles
 
 # generate dictionaries for src and dst files. {FilePath : Modification Time}
 # generate dictionaries for src and dst directories. {FilePath : 1}. Needed because we may have to delete a folder altogether if it has been deleted from the src.
@@ -19,22 +20,27 @@ def dictGen(src,dst):
     srcDirsDict={}
     dstDirsDict={}
 
-
+    #while making src dictionary, make sure to replace the src part with dst. Because we'll be checking if the dst dict item is present in the src dict
     for root,dirs,files in os.walk(src):
         for hereFile in files:
-            (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(hereFile)
-            v = time.ctime(mtime)
+            if hereFile == '.DS_Store': #mac problem
+                continue
             filepath =  os.path.join(root,hereFile)
-            srcFilesDict[filepath]=v
+            (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(filepath)
+            v = time.ctime(mtime)
+            srcFilesDict[filepath.replace(src,dst)]=v
         for hereDir in dirs:
             filepath =  os.path.join(root,hereDir)
-            srcDirsDict[filepath] = 1
+            srcDirsDict[filepath.replace(src,dst)] = 1
+
 
     for root,dirs,files in os.walk(dst):
         for hereFile in files:
-            (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(hereFile)
-            v = time.ctime(mtime)
+            if hereFile == '.DS_Store': #mac problem
+                continue
             filepath =  os.path.join(root,hereFile)
+            (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(filepath)
+            v = time.ctime(mtime)
             dstFilesDict[filepath]=v
         for hereDir in dirs:
             filepath =  os.path.join(root,hereDir)
@@ -75,12 +81,40 @@ def delOldFolders(srcDirsDict,dstDirsDict):
         except OSError, e:
             print ("Error: %s - %s." % (e.filename,e.strerror))
 
+def addModFiles(srcFilesDict,dstFilesDict,src,dst):
+
+    mod = []
+    for hereFile in srcFilesDict:
+        if hereFile not in dstFilesDict:    #it is a new file
+            mod += [hereFile]
+        elif srcFilesDict[hereFile]>dstFilesDict[hereFile]:
+            mod += [hereFile]
+
+    for hereFile in mod:
+        hereFileDst=os.path.dirname(hereFile)+'/'
+        hereFileSrc=hereFile.replace(dst,src)   #as we had modified the source file path
+        copyFiles.copyBasic(hereFileSrc,hereFileDst)
+        print '%s file created' % os.path.basename(hereFile)
+
+def addNewEmptyFolders(srcDirsDict,dstDirsDict):
+
+    mod = []
+    for Dirs in srcDirsDict:
+        if Dirs not in dstDirsDict:    #it is a new file
+            mod += [Dirs]
+    for Dirs in mod:
+        os.mkdir(Dirs)
+        print '%s empty folder created' % os.path.basename(Dirs)
+
 
 def mainDiffBackup(src, dst):
 
     srcFilesDict,dstFilesDict,srcDirsDict,dstDirsDict = dictGen(src,dst)
     delOldFiles(srcFilesDict,dstFilesDict)
     delOldFolders(srcDirsDict,dstDirsDict)
+    addModFiles(srcFilesDict,dstFilesDict,src,dst)
+    addNewEmptyFolders(srcDirsDict,dstDirsDict)   #the new folders with new files would have been created already
+
 
 
 

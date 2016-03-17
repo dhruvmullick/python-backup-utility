@@ -3,6 +3,7 @@ Python file backup utility
 """
 
 import copyFiles
+import diffBackup
 import createISO
 
 # "src = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/python-backup-utility/main.py"
@@ -16,12 +17,16 @@ dst = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/destFolder/"
 ignoreList={}
 
 #Make a completely fresh backup
-copyFiles.copyFull(src,dst,ignoreList)
+# copyFiles.copyFull(src,dst,ignoreList)
+
+diffBackup.mainDiffBackup(src,dst)
+
 
 #create an isoimage of the backup folder
 isodstfolder = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/"    #folder where iso image is to be saved. Take input from user.
 backupdst=dst   #folder of which we have to make backup
-createISO.isoCreator(backupdst,isodstfolder)
+# createISO.isoCreator(backupdst,isodstfolder)
+
 
 
 print "\n\nBackup has been created successfully. Thank you. \n\n"
