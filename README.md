@@ -4,9 +4,9 @@ A utility to backup files and folders
 
 1. Keep exceptions for backing up
 2. Backup only the modified files
-3. Create an ISO image after the backup is completed
-4. Support extracting of backup files from ISO image (TO DO)
-5. Differential Backup. (TO DO)
+3. Differential Backup. 
+4. Create an ISO image after the backup is completed
+5. Support extracting of backup files from ISO image (TO DO)
     
 
 —————————————————————————————————————————————————————

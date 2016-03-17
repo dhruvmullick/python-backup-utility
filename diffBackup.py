@@ -13,30 +13,69 @@ import copyFiles
 # mtime is time the file's Contents were last changed (in Unix systems). ctime gives the time the file's metadata was changed.
 # .ctime is method for formatting the string inside
 
-def dictGen(src,dst):
+
+#while making src dictionary, make sure to replace the src part with dst. Because we'll be checking if the dst dict item is present in the src dict
+def srcDictGen(src,dst,ignoreList):
+
+    srcFilesDict={}
+    srcDirsDict={}
+    if(ignoreList.has_key(src)):
+        return (srcFilesDict,srcDirsDict)
+
+    for root,dirs,files in os.walk(src):   #walk through the directory
+
+        dirs[:] = [d for d in dirs if os.path.join(root,d) not in ignoreList] #modify dirs so that you enter only if the subdirectory is not in ignoreList
+        os.chdir(root)
+
+        for d in dirs:
+            srcDirsDict[os.path.join(root,d).replace(src,dst)]=1   #srcDirsDict must store the address we need in the dst directory
+
+        for hereFile in files:
+            if(hereFile[0]=='.'):   #don't copy hidden files
+                continue
+
+            temp,ex = hereFile.rsplit('.',1)
+            ex='.'+ex
+            srcpath=os.path.join(root,hereFile)
+            dstpath=root.replace(src,dst)+'/'
+
+            if(ignoreList.has_key(ex)): #the extension is to be ignored
+                continue
+            elif(ignoreList.has_key(srcpath)):   #the file is to be ignored
+                continue
+            else:
+                filepath =  srcpath
+                (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(filepath)
+                v = time.ctime(mtime)
+                srcFilesDict[filepath.replace(src,dst)]=v
+
+    return (srcFilesDict,srcDirsDict)
+
+
+def dictGen(src,dst,ignoreList):
 
     srcFilesDict={}
     dstFilesDict={}
     srcDirsDict={}
     dstDirsDict={}
 
-    #while making src dictionary, make sure to replace the src part with dst. Because we'll be checking if the dst dict item is present in the src dict
-    for root,dirs,files in os.walk(src):
-        for hereFile in files:
-            if hereFile == '.DS_Store': #mac problem
-                continue
-            filepath =  os.path.join(root,hereFile)
-            (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(filepath)
-            v = time.ctime(mtime)
-            srcFilesDict[filepath.replace(src,dst)]=v
-        for hereDir in dirs:
-            filepath =  os.path.join(root,hereDir)
-            srcDirsDict[filepath.replace(src,dst)] = 1
+    # for root,dirs,files in os.walk(src):
+    #     for hereFile in files:
+    #         if hereFile[0] == '.': #hidden files
+    #             continue
+    #         filepath =  os.path.join(root,hereFile)
+    #         (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(filepath)
+    #         v = time.ctime(mtime)
+    #         srcFilesDict[filepath.replace(src,dst)]=v
+    #     for hereDir in dirs:
+    #         filepath =  os.path.join(root,hereDir)
+    #         srcDirsDict[filepath.replace(src,dst)] = 1
 
+    srcFilesDict,srcDirsDict=srcDictGen(src,dst,ignoreList)
 
     for root,dirs,files in os.walk(dst):
         for hereFile in files:
-            if hereFile == '.DS_Store': #mac problem
+            if hereFile[0] == '.': #hidden files
                 continue
             filepath =  os.path.join(root,hereFile)
             (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(filepath)
@@ -58,6 +97,7 @@ def delOldFiles(srcFilesDict,dstFilesDict):
         if file not in srcFilesDict :
             rem += [file]
 
+    # delete the files
     for file in rem:
         if os.path.isfile(file):
             os.remove(file)
@@ -68,7 +108,7 @@ def delOldFiles(srcFilesDict,dstFilesDict):
 
 def delOldFolders(srcDirsDict,dstDirsDict):
 
-    # make a list of files which are no longer in src and delete them
+    # make a list of folders which are no longer in src and delete them (we would have already deleted the files in it)
     rem = []
     for Dir in dstDirsDict:
         if Dir not in srcDirsDict :
@@ -81,21 +121,26 @@ def delOldFolders(srcDirsDict,dstDirsDict):
         except OSError, e:
             print ("Error: %s - %s." % (e.filename,e.strerror))
 
+
 def addModFiles(srcFilesDict,dstFilesDict,src,dst):
 
     mod = []
+
+    #make a list of the modified/new files
     for hereFile in srcFilesDict:
         if hereFile not in dstFilesDict:    #it is a new file
             mod += [hereFile]
-        elif srcFilesDict[hereFile]>dstFilesDict[hereFile]:
+        elif srcFilesDict[hereFile]>dstFilesDict[hereFile]: #that is the source file is more recent
             mod += [hereFile]
 
+    #copy the files in the list
     for hereFile in mod:
         hereFileDst=os.path.dirname(hereFile)+'/'
         hereFileSrc=hereFile.replace(dst,src)   #as we had modified the source file path
         copyFiles.copyBasic(hereFileSrc,hereFileDst)
         print '%s file created' % os.path.basename(hereFile)
 
+# copy the new empty folders. The non empty folders would have been created already
 def addNewEmptyFolders(srcDirsDict,dstDirsDict):
 
     mod = []
@@ -104,16 +149,22 @@ def addNewEmptyFolders(srcDirsDict,dstDirsDict):
             mod += [Dirs]
     for Dirs in mod:
         os.mkdir(Dirs)
-        print '%s empty folder created' % os.path.basename(Dirs)
+        print 'asdfasdfadsf'
+        print '%s empty folder created' % Dirs
+
+        # print '%s empty folder created' % os.path.basename(Dirs)
 
 
-def mainDiffBackup(src, dst):
+def mainDiffBackup(src, dst, ignoreList):
 
-    srcFilesDict,dstFilesDict,srcDirsDict,dstDirsDict = dictGen(src,dst)
+    srcFilesDict,dstFilesDict,srcDirsDict,dstDirsDict = dictGen(src,dst,ignoreList)
     delOldFiles(srcFilesDict,dstFilesDict)
-    delOldFolders(srcDirsDict,dstDirsDict)
+    delOldFolders(srcDirsDict,dstDirsDict)  #which would now be empty after delOldFiles
     addModFiles(srcFilesDict,dstFilesDict,src,dst)
     addNewEmptyFolders(srcDirsDict,dstDirsDict)   #the new folders with new files would have been created already
+
+    # print srcFilesDict
+    # print srcDirsDict
 
 
 

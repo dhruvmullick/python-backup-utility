@@ -13,13 +13,13 @@ dst = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/destFolder/"
 
 # ignoreList = {".pdf":1} #write paths of files, folders and extensions here which we don't want to copy
 # ignoreList = {"/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/gaddaarChetan.py":1}
-# ignoreList = {"/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/Bleh":1}
-ignoreList={}
+ignoreList = {"/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/Bleh":1}
+# ignoreList={}
 
 #Make a completely fresh backup
 # copyFiles.copyFull(src,dst,ignoreList)
 
-diffBackup.mainDiffBackup(src,dst)
+diffBackup.mainDiffBackup(src,dst,ignoreList)
 
 
 #create an isoimage of the backup folder

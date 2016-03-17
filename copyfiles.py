@@ -6,6 +6,7 @@ Copy functions
 
 import os
 import shutil
+import time
 
 #copyBasic - Recursive copy. src can be a folder or a file, and dst path shouldn't exist is folder copied, but doesn't matter if file copied
 #better than the default copy2() function, as we can specify the new filename as well, and take care of the errors.
@@ -36,11 +37,9 @@ def copyFull(src, dst, ignoreList):
     if(ignoreList.has_key(src)):
         print '\n-----\nCopied\n-----\n'
 
-
     for root,dirs,files in os.walk(src):   #walk through the directory
 
         dirs[:] = [d for d in dirs if os.path.join(root,d) not in ignoreList] #modify dirs so that you enter only if the subdirectory is not in ignoreList
-
         os.chdir(root)
 
         for hereFile in files:
@@ -59,8 +58,6 @@ def copyFull(src, dst, ignoreList):
             elif(ignoreList.has_key(srcpath)):   #the file is to be ignored
                 continue
             else:
-                # print 'srcpath = ' + srcpath
-                # print 'dstpath = ' + dstpath
                 copyBasic(srcpath,dstpath)
 
     print '\n-----\nCopied\n-----\n'
