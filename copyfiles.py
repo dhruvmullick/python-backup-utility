@@ -1,9 +1,15 @@
-import shutil, errno
-import os
+"""
+Copy functions
+1. copyBasic - to implement basic copying of single file/tree
+2. copyFull - to copy files and folders taking into consideration the ignored list
+"""
 
-#myCopy1 - Recursive copy. src can be a folder or a file, and dst path shouldn't exist is folder copied, but doesn't matter if file copied
-#better than the default copy2() function, as we can specify the new filename as well.
-def myCopy1(src,dst):
+import os
+import shutil
+
+#copyBasic - Recursive copy. src can be a folder or a file, and dst path shouldn't exist is folder copied, but doesn't matter if file copied
+#better than the default copy2() function, as we can specify the new filename as well, and take care of the errors.
+def copyBasic(src,dst):
     if os.path.isfile(src): #src is a file.
         if not os.path.exists(dst): #if it is a file then dst folder must exist
             os.mkdir(dst)
@@ -23,9 +29,9 @@ def myCopy1(src,dst):
     #         raise
     #
 
-#myCopy2 - copy files from src to dst recursively. If the file is an exception, then ignore it.
 
-def myCopy2(src, dst, ignoreList):
+#copyFull - copy files from src to dst recursively. If the file is an exception, then ignore it.
+def copyFull(src, dst, ignoreList):
 
     if(ignoreList.has_key(src)):
         print '\n-----\nCopied\n-----\n'
@@ -55,7 +61,7 @@ def myCopy2(src, dst, ignoreList):
             else:
                 # print 'srcpath = ' + srcpath
                 # print 'dstpath = ' + dstpath
-                myCopy1(srcpath,dstpath)
+                copyBasic(srcpath,dstpath)
 
     print '\n-----\nCopied\n-----\n'
 
