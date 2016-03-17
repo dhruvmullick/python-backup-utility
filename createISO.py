@@ -1,5 +1,6 @@
 """
 To create an iso image of the backup folder
+Note that mkisofs must be installed on the system. Note that this is not on windows.
 """
 
 import datetime
