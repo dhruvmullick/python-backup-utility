@@ -16,17 +16,17 @@ dst = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/destFolder/"
 ignoreList = {"/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/Bleh":1}
 # ignoreList={}
 
-#Make a completely fresh backup
+
+# Make a completely fresh backup
 # copyFiles.copyFull(src,dst,ignoreList)
 
+# Make a differential backup
 diffBackup.mainDiffBackup(src,dst,ignoreList)
 
-
-#create an isoimage of the backup folder
+# Create an isoimage of the backup folder
 isodstfolder = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/"    #folder where iso image is to be saved. Take input from user.
-backupdst=dst   #folder of which we have to make backup
+backupdst=dst   # Folder of which we have to make backup
 # createISO.isoCreator(backupdst,isodstfolder)
-
 
 
 print "\n\nBackup has been created successfully. Thank you. \n\n"

@@ -6,7 +6,6 @@ Copy functions
 
 import os
 import shutil
-import time
 
 #copyBasic - Recursive copy. src can be a folder or a file, and dst path shouldn't exist is folder copied, but doesn't matter if file copied
 #better than the default copy2() function, as we can specify the new filename as well, and take care of the errors.

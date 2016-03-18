@@ -46,8 +46,8 @@ def srcDictGen(src,dst,ignoreList):
             else:
                 filepath =  srcpath
                 (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(filepath)
-                v = time.ctime(mtime)
-                srcFilesDict[filepath.replace(src,dst)]=v
+                # v = time.ctime(mtime)
+                srcFilesDict[filepath.replace(src,dst)]=mtime
 
     return (srcFilesDict,srcDirsDict)
 
@@ -79,8 +79,8 @@ def dictGen(src,dst,ignoreList):
                 continue
             filepath =  os.path.join(root,hereFile)
             (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(filepath)
-            v = time.ctime(mtime)
-            dstFilesDict[filepath]=v
+            # v = time.ctime(mtime)
+            dstFilesDict[filepath]=mtime
         for hereDir in dirs:
             filepath =  os.path.join(root,hereDir)
             dstDirsDict[filepath] = 1
@@ -148,9 +148,10 @@ def addNewEmptyFolders(srcDirsDict,dstDirsDict):
         if Dirs not in dstDirsDict:    #it is a new file
             mod += [Dirs]
     for Dirs in mod:
-        os.mkdir(Dirs)
-        print 'asdfasdfadsf'
-        print '%s empty folder created' % Dirs
+        if(not os.path.isdir(Dirs)):
+            os.mkdir(Dirs)
+            # print 'asdfasdfadsf'
+            print '%s empty folder created' % Dirs
 
         # print '%s empty folder created' % os.path.basename(Dirs)
 
@@ -162,15 +163,5 @@ def mainDiffBackup(src, dst, ignoreList):
     delOldFolders(srcDirsDict,dstDirsDict)  #which would now be empty after delOldFiles
     addModFiles(srcFilesDict,dstFilesDict,src,dst)
     addNewEmptyFolders(srcDirsDict,dstDirsDict)   #the new folders with new files would have been created already
-
-    # print srcFilesDict
-    # print srcDirsDict
-
-
-
-
-
-
-
 
 
