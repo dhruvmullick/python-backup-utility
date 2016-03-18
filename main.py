@@ -18,10 +18,10 @@ ignoreList = {"/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFold
 
 
 # Make a completely fresh backup
-# copyFiles.copyFull(src,dst,ignoreList)
+copyFiles.copyFull(src,dst,ignoreList)
 
 # Make a differential backup
-diffBackup.mainDiffBackup(src,dst,ignoreList)
+# diffBackup.mainDiffBackup(src,dst,ignoreList)
 
 # Create an isoimage of the backup folder
 isodstfolder = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/"    #folder where iso image is to be saved. Take input from user.
