@@ -30,11 +30,18 @@ def copyBasic(src,dst):
     #
 
 
-#copyFull - copy files from folder src to dst recursively. If the file is an exception, then ignore it.
+#copyFull - copy files from folder/file src to dst recursively. If the file is an exception, then ignore it.
 def copyFull(src, dst, ignoreList):
 
     if(ignoreList.has_key(src)):
         print '\n-----\nCopied\n-----\n'
+
+    # if src is a file, just copy it using copyBasic
+    if(os.path.isfile(src)):
+        if(src not in ignoreList):
+            print 'file name = ' + os.path.basename(src)
+            copyBasic(src,dst)
+        return
 
     for root,dirs,files in os.walk(src):   #walk through the directory
 
