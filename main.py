@@ -5,9 +5,10 @@ Python file backup utility
 import copyFiles
 import diffBackup
 import createISO
+import clean
 
 # "src = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/python-backup-utility/main.py"
-src = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/"
+src = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/Chetan.py"
 dst = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/destFolder/"
 
 
@@ -18,6 +19,8 @@ ignoreList = {"/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFold
 
 
 # Make a completely fresh backup
+#delete the files already there at dst, as this is a fresh backup.
+clean.readyDst(dst)
 copyFiles.copyFull(src,dst,ignoreList)
 
 # Make a differential backup

@@ -67,4 +67,3 @@ def copyFull(src, dst, ignoreList):
                 copyBasic(srcpath,dstpath)
 
     print '\n-----\nCopied\n-----\n'
-
