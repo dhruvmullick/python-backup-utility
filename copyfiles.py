@@ -12,10 +12,8 @@ import shutil
 def copyBasic(src,dst):
     if os.path.isfile(src): #src is a file.
         if not os.path.exists(dst): #if it is a file then dst folder must exist
-            os.mkdir(dst)
-        # L=src.rsplit('.',1) #obtain the source and dest path
-        # L[0]=L[0]+'_new'      #use this to keep a new name for the copied file
-        # src=L[0]+'.'+L[1]
+            # os.mkdir(dst)
+            os.makedirs(dst)
         dst=dst+os.path.basename(src)  #copy src file with a new name to dst folder
         shutil.copyfile(src,dst)
         return
