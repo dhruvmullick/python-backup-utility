@@ -10,7 +10,8 @@ A utility to backup files and folders
 5. Support extracting of backup files from ISO image (TO DO)
     
 
-_____________________________________________________
+__________
+
 
 
 Backend:
@@ -39,7 +40,7 @@ Differential Backup :
 To create an iso image of the backup, the user specifies the destination folder of the backup iso image. The iso image created is of the name ‘Backup_<time>_<date>’. 
 
 
-_____________________________________________________
+__________
 
 
 Frontend :
