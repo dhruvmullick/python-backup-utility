@@ -1,4 +1,5 @@
-# python-backup-utility
+Python Backup Utility
+========================
 
 A utility to backup files and folders
 
@@ -9,10 +10,11 @@ A utility to backup files and folders
 5. Support extracting of backup files from ISO image (TO DO)
     
 
-—————————————————————————————————————————————————————
+_____________________________________________________
+
 
 Backend:
-
+---------
 
 We take as input the source and destination from the user, and create a backup. The source may be either a:
   1. File
@@ -37,11 +39,11 @@ Differential Backup :
 To create an iso image of the backup, the user specifies the destination folder of the backup iso image. The iso image created is of the name ‘Backup_<time>_<date>’. 
 
 
-—————————————————————————————————————————————————————
+_____________________________________________________
 
 
 Frontend :
-
+-----------
 
 
 
