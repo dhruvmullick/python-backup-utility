@@ -99,6 +99,7 @@ b10.pack()
 Destdir = Button(f1, text="Select Backup Destination", command=DestSelect)
 Destdir.pack()
 BackupNow = Button(f1, text="Backup Now", command=Callfun)
+BackupNow.pack()
 b2.pack()
 
 

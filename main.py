@@ -5,6 +5,7 @@ Python file backup utility
 import diffBackup
 import createISO
 import clean
+import os
 
 # "src = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/python-backup-utility/main.py"
 # src = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/srcFolder/"
@@ -17,7 +18,7 @@ import clean
 # ignoreList={}
 
 
-def backupNow(L,dst, ignoreList):
+def Backupnow(L,dst, ignoreList):
 
     # Make a completely fresh backup
     #delete the files already there at dst, as this is a fresh backup.
@@ -27,19 +28,15 @@ def backupNow(L,dst, ignoreList):
 
     # Make a differential backup
 
-    for src in L:
-        print src
-    print dst
 
-        # diffBackup.mainDiffBackup(src,dst,ignoreList)
+    dst=os.path.join(dst,'destFolder')
+
+    for src in L:
+        diffBackup.mainDiffBackup(src,dst,{})
+        # print src
 
     # Create an isoimage of the backup folder
     # isodstfolder = "/Users/dhruvmullick/CS/Project Work/python-backup-utility/"    #folder where iso image is to be saved. Take input from user.
     # backupdst=dst   # Folder of which we have to make backup
     # createISO.isoCreator(backupdst,isodstfolder)
     print "\n\nBackup has been created successfully. Thank you. \n\n"
-
-
-    for src in L:
-        print src
-    print dst
