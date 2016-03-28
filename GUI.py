@@ -14,41 +14,41 @@ root = Tk()
 Ldir = []
 Ldirignore = []
 dirn = []
-ldir1 = []
+ldir1 = {}
 dirname2=""
 
 def askdirectory():
     global Ldir
     dirname = tkFileDialog.askdirectory(parent=root, title=dirtext)
     # btn["text"] =str(btn["text"]+str(dirname)) if dirname else dirtext
-    print dirname
+    # print dirname
     T.insert(INSERT, dirname+"\n")
-    Ldir += [(dirname)]
+    Ldir += [dirname]
 
 
 def openfile():
     global Ldir
     filename = tkFileDialog.askopenfilename(parent=root, title=filetext)  # filename not filehandle
     #  filebut["text"]= str(filename) if filename else filetext
-    print filename
+    # print filename
     T.insert(INSERT, filename+"\n")
-    Ldir +=[(filename)]
+    Ldir +=[filename]
 
 
 def askdirectory1():
     global ldir1
     dirname1 = tkFileDialog.askdirectory(parent=root, title=dirtext)
-    print dirname1
+    # print dirname1
     T4.insert(INSERT, dirname1+"\n")
-    ldir1 += [(dirname1)]
+    ldir1[dirname1]=1
 
 
 def openfile1():
     global ldir1
     filename1 = tkFileDialog.askopenfilename(parent=root, title=filetext)
-    print filename1
+    # print filename1
     T4.insert(INSERT, filename1+"\n")
-    ldir1 += [(filename1)]
+    ldir1[filename1]=1
 
 
 def askd1():
@@ -64,7 +64,7 @@ def  DestSelect():
 
 def Callfun():
     global Ldir,dirname2,ldir1
-    main.Backupnow(Ldir,dirname2,[])
+    main.Backupnow(Ldir,dirname2,ldir1)
 
 root.title('Backup Implementation')
 #   *** NOTEBOOK***

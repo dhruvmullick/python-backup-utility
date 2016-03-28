@@ -18,21 +18,22 @@ import os
 # ignoreList={}
 
 
-def Backupnow(L,dst, ignoreList):
+def Backupnow(L,dst,ignoreList):
 
     # Make a completely fresh backup
-    #delete the files already there at dst, as this is a fresh backup.
+    # delete the files already there at dst, as this is a fresh backup.
     #
     # clean.readyDst(dst)
     # copyFiles.copyFull(src,dst,ignoreList)
-
     # Make a differential backup
 
-
-    dst=os.path.join(dst,'destFolder')
-
+    print L
     for src in L:
-        diffBackup.mainDiffBackup(src,dst,{})
+        if src=='':
+            continue
+        dstt=os.path.join(dst,os.path.basename(src))
+        # print dstt
+        diffBackup.mainDiffBackup(src,dstt,ignoreList)
         # print src
 
     # Create an isoimage of the backup folder

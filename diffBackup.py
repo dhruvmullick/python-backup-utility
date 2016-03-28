@@ -13,7 +13,6 @@ import copyFiles
 # mtime is time the file's Contents were last changed (in Unix systems). ctime gives the time the file's metadata was changed.
 # .ctime is method for formatting the string inside
 
-
 #while making src dictionary, make sure to replace the src part with dst. Because we'll be checking if the dst dict item is present in the src dict
 def srcDictGen(src,dst,ignoreList):
 
@@ -51,25 +50,10 @@ def srcDictGen(src,dst,ignoreList):
 
     return (srcFilesDict,srcDirsDict)
 
-
 def dictGen(src,dst,ignoreList):
 
-    srcFilesDict={}
     dstFilesDict={}
-    srcDirsDict={}
     dstDirsDict={}
-
-    # for root,dirs,files in os.walk(src):
-    #     for hereFile in files:
-    #         if hereFile[0] == '.': #hidden files
-    #             continue
-    #         filepath =  os.path.join(root,hereFile)
-    #         (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(filepath)
-    #         v = time.ctime(mtime)
-    #         srcFilesDict[filepath.replace(src,dst)]=v
-    #     for hereDir in dirs:
-    #         filepath =  os.path.join(root,hereDir)
-    #         srcDirsDict[filepath.replace(src,dst)] = 1
 
     srcFilesDict,srcDirsDict=srcDictGen(src,dst,ignoreList)
 
@@ -125,7 +109,6 @@ def delOldFolders(srcDirsDict,dstDirsDict):
 def addModFiles(srcFilesDict,dstFilesDict,src,dst):
 
     mod = []
-
     #make a list of the modified/new files
     for hereFile in srcFilesDict:
         if hereFile not in dstFilesDict:    #it is a new file
@@ -163,5 +146,3 @@ def mainDiffBackup(src, dst, ignoreList):
     delOldFolders(srcDirsDict,dstDirsDict)  #which would now be empty after delOldFiles
     addModFiles(srcFilesDict,dstFilesDict,src,dst)
     addNewEmptyFolders(srcDirsDict,dstDirsDict)   #the new folders with new files would have been created already
-
-
