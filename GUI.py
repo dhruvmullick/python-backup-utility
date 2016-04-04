@@ -16,38 +16,48 @@ Ldirignore = []
 dirn = []
 ldir1 = {}
 dirname2=""
+ct = 0
+ct1 = 0
+LC=[]
+LD=[]
 
 def askdirectory():
     global Ldir
+    global ct
     dirname = tkFileDialog.askdirectory(parent=root, title=dirtext)
-    # btn["text"] =str(btn["text"]+str(dirname)) if dirname else dirtext
-    # print dirname
-    T.insert(INSERT, dirname+"\n")
+    ct=ct+1
+    str1 = '%s '%ct
+    T.insert(INSERT,str1+". " + dirname+"\n")
     Ldir += [dirname]
 
 
 def openfile():
     global Ldir
+    global ct
     filename = tkFileDialog.askopenfilename(parent=root, title=filetext)  # filename not filehandle
-    #  filebut["text"]= str(filename) if filename else filetext
-    # print filename
-    T.insert(INSERT, filename+"\n")
-    Ldir +=[filename]
+    ct=ct+1
+    str1 = '%s '%ct
+    T.insert(INSERT,str1+". " + filename+"\n")
+    Ldir += [filename]
 
 
 def askdirectory1():
     global ldir1
+    global ct1
     dirname1 = tkFileDialog.askdirectory(parent=root, title=dirtext)
-    # print dirname1
-    T4.insert(INSERT, dirname1+"\n")
-    ldir1[dirname1]=1
+    ct1=ct1+1
+    str1 = '%s '%ct1
+    T4.insert(INSERT, str1+". " + dirname1+"\n")
+    ldir1[dirname1] = 1
 
 
 def openfile1():
     global ldir1
+    global ct1
     filename1 = tkFileDialog.askopenfilename(parent=root, title=filetext)
-    # print filename1
-    T4.insert(INSERT, filename1+"\n")
+    ct1=ct1+1
+    str1 = '%s '%ct1
+    T4.insert(INSERT,str1+". "+ filename1+"\n")
     ldir1[filename1]=1
 
 
@@ -64,14 +74,24 @@ def  DestSelect():
 
 def Callfun():
     global Ldir,dirname2,ldir1
-    main.Backupnow(Ldir,dirname2,ldir1)
+    (LC,LD)=main.Backupnow(Ldir,dirname2,ldir1)
+    #print the contents of LC and LD
+
+    # print 'Call fun'
+    # print LC
+    # print LD
+
+    for x in LC:
+        T5.insert(INSERT,x+"\n")
+    for x in LD:
+        T5.insert(INSERT,x+"\n")
+
 
 root.title('Backup Implementation')
 #   *** NOTEBOOK***
 n = ttk.Notebook(root)
 # fstatusr=Frame(root)
 # fstatusr.grid(sticky=S+W)
-
 # fstatusl=Frame(root)
 # fstatusl.grid(sticky=S+E)
 f1 = Frame(n, bd=1, relief=SUNKEN)  # first page, which would get widgets gridded into it
@@ -85,8 +105,12 @@ n.add(f3, text='History')
 n.add(f4, text='ISO image')
 n.pack(fill=BOTH)
 
-T = Text(f1)
+scrollbar = Scrollbar(f1)
+scrollbar.pack(side=RIGHT, fill=Y)
+T = Text(f1, wrap=WORD, yscrollcommand=scrollbar.set, font=("helvetica", 12))
 T.pack()
+scrollbar.config(command=T.yview)
+
 b1 = Button(f1, text="Browse directories", command=askdirectory)
 b1.pack()
 b2 = Button(f1, text="Browse files", command=openfile)
@@ -110,11 +134,19 @@ status1.pack(side=BOTTOM, fill=X)
 #  enter the present time and date at the right
 
 str = '%s : %s' %(now.hour, now.minute)
-
 status2 = Label(root, text=str, bd=1,relief=SUNKEN, anchor=E)  # create a function so that the status bar#  changes text evry time a button is clicked
 status2.pack(side=BOTTOM, fill=X)  # enter the present time and date at the right
-T4 = Text(f2, height=20)
+scrollbar1 = Scrollbar(f2)
+scrollbar1.pack(side=RIGHT, fill=Y)
+T4 = Text(f2, wrap=WORD, yscrollcommand=scrollbar.set, font=("helvetica", 12))
 T4.pack()
+scrollbar1.config(command=T.yview)
+scrollbar2 = Scrollbar(f3)
+scrollbar2.pack(side=RIGHT, fill=Y)
+T5 = Text(f3, wrap=WORD, yscrollcommand=scrollbar.set, font=("helvetica", 12))
+T5.pack()
+scrollbar2.config(command=T.yview)
+
 b11 = Button(f2, text="Browse directories to ignore", command=askdirectory1)
 b11.pack()
 b21 = Button(f2, text="Browse files to ignore", command=openfile1)
@@ -125,7 +157,6 @@ var1.set('select from the options below')
 drop = OptionMenu(f2, var1, *lst1)
 drop.grid(row=15)
 drop.pack()
-
 root.mainloop()
 #  check whether the last char
 #  check file and directory and extensions.. Backup now button

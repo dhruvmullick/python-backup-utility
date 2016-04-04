@@ -13,16 +13,28 @@ import copyFiles
 # mtime is time the file's Contents were last changed (in Unix systems). ctime gives the time the file's metadata was changed.
 # .ctime is method for formatting the string inside
 
+LC=[]
+LD=[]
+
 #while making src dictionary, make sure to replace the src part with dst. Because we'll be checking if the dst dict item is present in the src dict
 def srcDictGen(src,dst,ignoreList):
 
+    print 'source -- '
+    print src
     srcFilesDict={}
     srcDirsDict={}
     if(ignoreList.has_key(src)):
         return (srcFilesDict,srcDirsDict)
 
-    for root,dirs,files in os.walk(src):   #walk through the directory
 
+    if os.path.isfile(src):
+        (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(src)
+        v = time.ctime(mtime)
+        srcFilesDict[dst]=mtime
+        return (srcFilesDict,srcDirsDict)
+
+
+    for root,dirs,files in os.walk(src):   #walk through the directory
         dirs[:] = [d for d in dirs if os.path.join(root,d) not in ignoreList] #modify dirs so that you enter only if the subdirectory is not in ignoreList
         os.chdir(root)
 
@@ -56,10 +68,11 @@ def dictGen(src,dst,ignoreList):
     dstDirsDict={}
 
     srcFilesDict,srcDirsDict=srcDictGen(src,dst,ignoreList)
+    # print dst
 
     for root,dirs,files in os.walk(dst):
         for hereFile in files:
-            if hereFile[0] == '.': #hidden files
+            if hereFile[0] == '.':  # hidden files
                 continue
             filepath =  os.path.join(root,hereFile)
             (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(filepath)
@@ -75,6 +88,7 @@ def dictGen(src,dst,ignoreList):
 # Delete the files which are no longer in the source now.
 def delOldFiles(srcFilesDict,dstFilesDict):
 
+    global LD
     # make a list of files which are no longer in src and delete them
     rem = []
     for file in dstFilesDict:
@@ -85,12 +99,15 @@ def delOldFiles(srcFilesDict,dstFilesDict):
     for file in rem:
         if os.path.isfile(file):
             os.remove(file)
+            LD += [os.path.basename(file)]
             print("%s file deleted" %(os.path.basename(file)))
         else:
             print("Error: %s file not found" % file)
 
 
 def delOldFolders(srcDirsDict,dstDirsDict):
+
+    global LD
 
     # make a list of folders which are no longer in src and delete them (we would have already deleted the files in it)
     rem = []
@@ -101,6 +118,7 @@ def delOldFolders(srcDirsDict,dstDirsDict):
     for Dir in rem:
         try:
             shutil.rmtree(Dir)
+            LD += [os.path.basename(Dir)]
             print("%s folder deleted" %(os.path.basename(Dir)))
         except OSError, e:
             print ("Error: %s - %s." % (e.filename,e.strerror))
@@ -109,6 +127,7 @@ def delOldFolders(srcDirsDict,dstDirsDict):
 def addModFiles(srcFilesDict,dstFilesDict,src,dst):
 
     mod = []
+    global LC
     #make a list of the modified/new files
     for hereFile in srcFilesDict:
         if hereFile not in dstFilesDict:    #it is a new file
@@ -121,12 +140,14 @@ def addModFiles(srcFilesDict,dstFilesDict,src,dst):
         hereFileDst=os.path.dirname(hereFile)+'/'
         hereFileSrc=hereFile.replace(dst,src)   #as we had modified the source file path
         copyFiles.copyBasic(hereFileSrc,hereFileDst)
+        LC+=[hereFile]
         print '%s file created' % os.path.basename(hereFile)
 
 # copy the new empty folders. The non empty folders would have been created already
 def addNewEmptyFolders(srcDirsDict,dstDirsDict):
 
     mod = []
+    global LC
     for Dirs in srcDirsDict:
         if Dirs not in dstDirsDict:    #it is a new file
             mod += [Dirs]
@@ -134,6 +155,7 @@ def addNewEmptyFolders(srcDirsDict,dstDirsDict):
         if(not os.path.isdir(Dirs)):
             os.mkdir(Dirs)
             # print 'asdfasdfadsf'
+            LC+=[Dirs]
             print '%s empty folder created' % Dirs
 
         # print '%s empty folder created' % os.path.basename(Dirs)
@@ -141,8 +163,11 @@ def addNewEmptyFolders(srcDirsDict,dstDirsDict):
 
 def mainDiffBackup(src, dst, ignoreList):
 
+    global LC,LD
+    print 'Backing up... \n'
     srcFilesDict,dstFilesDict,srcDirsDict,dstDirsDict = dictGen(src,dst,ignoreList)
     delOldFiles(srcFilesDict,dstFilesDict)
     delOldFolders(srcDirsDict,dstDirsDict)  #which would now be empty after delOldFiles
     addModFiles(srcFilesDict,dstFilesDict,src,dst)
     addNewEmptyFolders(srcDirsDict,dstDirsDict)   #the new folders with new files would have been created already
+    return LC, LD
