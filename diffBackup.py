@@ -19,15 +19,19 @@ LD=[]
 #while making src dictionary, make sure to replace the src part with dst. Because we'll be checking if the dst dict item is present in the src dict
 def srcDictGen(src,dst,ignoreList):
 
-    print 'source -- '
-    print src
     srcFilesDict={}
     srcDirsDict={}
+
     if(ignoreList.has_key(src)):
         return (srcFilesDict,srcDirsDict)
 
 
     if os.path.isfile(src):
+        if(src.find('.')!=-1):
+            temp,ex = src.rsplit('.',1)
+            ex='.'+ex
+            if(ignoreList.has_key(ex)): #the extension is to be ignored
+                return (srcFilesDict,srcDirsDict)
         (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(src)
         v = time.ctime(mtime)
         srcFilesDict[dst]=mtime
@@ -45,10 +49,12 @@ def srcDictGen(src,dst,ignoreList):
             if(hereFile[0]=='.'):   #don't copy hidden files
                 continue
 
-            temp,ex = hereFile.rsplit('.',1)
-            ex='.'+ex
-            srcpath=os.path.join(root,hereFile)
-            dstpath=root.replace(src,dst)+'/'
+            ex="@!$*"
+            if(hereFile.find('.')!=-1):
+                temp,ex = hereFile.rsplit('.',1)
+                ex='.'+ex
+                srcpath=os.path.join(root,hereFile)
+                dstpath=root.replace(src,dst)+'/'
 
             if(ignoreList.has_key(ex)): #the extension is to be ignored
                 continue

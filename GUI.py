@@ -15,7 +15,7 @@ Ldir = []
 Ldirignore = []
 dirn = []
 ldir1 = {}
-dirname2=""
+dirname2 = ""
 ct = 0
 ct1 = 0
 LC=[]
@@ -25,47 +25,52 @@ def askdirectory():
     global Ldir
     global ct
     dirname = tkFileDialog.askdirectory(parent=root, title=dirtext)
-    ct=ct+1
-    str1 = '%s '%ct
-    T.insert(INSERT,str1+". " + dirname+"\n")
-    Ldir += [dirname]
+    if dirname != "":
+      ct=ct+1
+      str1 = '%s '%ct
+      T.insert(INSERT,str1+". " + dirname+"\n")
+      Ldir += [dirname]
 
 
 def openfile():
     global Ldir
     global ct
     filename = tkFileDialog.askopenfilename(parent=root, title=filetext)  # filename not filehandle
-    ct=ct+1
-    str1 = '%s '%ct
-    T.insert(INSERT,str1+". " + filename+"\n")
-    Ldir += [filename]
+    if filename != "":
+     ct=ct+1
+     str1 = '%s '%ct
+     T.insert(INSERT,str1+". " + filename+"\n")
+     Ldir += [filename]
 
 
 def askdirectory1():
     global ldir1
     global ct1
     dirname1 = tkFileDialog.askdirectory(parent=root, title=dirtext)
-    ct1=ct1+1
-    str1 = '%s '%ct1
-    T4.insert(INSERT, str1+". " + dirname1+"\n")
-    ldir1[dirname1] = 1
+    if dirname1 != "":
+     ct1=ct1+1
+     str1 = '%s '%ct1
+     T4.insert(INSERT, str1+". " + dirname1+"\n")
+     ldir1[dirname1] = 1
 
 
 def openfile1():
     global ldir1
     global ct1
     filename1 = tkFileDialog.askopenfilename(parent=root, title=filetext)
-    ct1=ct1+1
-    str1 = '%s '%ct1
-    T4.insert(INSERT,str1+". "+ filename1+"\n")
-    ldir1[filename1]=1
+    if filename1 != "":
+     ct1=ct1+1
+     str1 = '%s '%ct1
+     T4.insert(INSERT,str1+". "+ filename1+"\n")
+     ldir1[filename1]=1
 
 
 def askd1():
     global dirn
     dirname = tkFileDialog.askdirectory(parent=root, title=dirtext1)
-    T2.insert(INSERT, dirname+"\n")
-    dirn += [(dirname)]
+    if dirname != "":
+     T2.insert(INSERT, dirname+"\n")
+     dirn += [(dirname)]
     # Dest["text"] =str(dirn) if dirn else dirtext
 
 def  DestSelect():
@@ -74,17 +79,27 @@ def  DestSelect():
 
 def Callfun():
     global Ldir,dirname2,ldir1
-    (LC,LD)=main.Backupnow(Ldir,dirname2,ldir1)
+    global T,ct,ct1
+    global var1
+    if var1.get()!=None:
+        ldir1[var1.get()] = 1
+    (LC,LD) = main.Backupnow(Ldir,dirname2,ldir1)
+    now = datetime.datetime.now()
+    str1 = '%s : %s : %s ' %(now.day, now.month, now.year)
+    str = '%s : %s ' %(now.hour, now.minute)
     #print the contents of LC and LD
-
     # print 'Call fun'
     # print LC
     # print LD
-
+    T5.insert(INSERT, "Backup has been created at"+dirname2+" \n at "+str+" on "+str1+"\n")
+    T5.insert(INSERT, "Files last backed up are :\n")
     for x in LC:
-        T5.insert(INSERT,x+"\n")
+        T5.insert(INSERT, x + "\n")
     for x in LD:
-        T5.insert(INSERT,x+"\n")
+        T5.insert(INSERT, x + "\n")
+    T.delete("1.0",END)
+    ct=0
+    ct1=0
 
 
 root.title('Backup Implementation')
@@ -151,10 +166,12 @@ b11 = Button(f2, text="Browse directories to ignore", command=askdirectory1)
 b11.pack()
 b21 = Button(f2, text="Browse files to ignore", command=openfile1)
 b21.pack()
-lst1 = ['.pdf', '.txt', '.rtf', '.ppt']
+
+lst1 = ['None','.pdf', '.txt', '.rtf', '.ppt']
 var1 = StringVar()
 var1.set('select from the options below')
 drop = OptionMenu(f2, var1, *lst1)
+
 drop.grid(row=15)
 drop.pack()
 root.mainloop()
