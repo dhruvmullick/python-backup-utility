@@ -26,6 +26,7 @@ def Backupnow(L,dst,ignoreList):
         if src=='':
             continue
         dstt=os.path.join(dst,os.path.basename(src))
+        (LC,LD) = diffBackup.mainDiffBackup(src,dstt,ignoreList)
 
 
     print 'src files: '
@@ -34,7 +35,6 @@ def Backupnow(L,dst,ignoreList):
 
     print 'dst files: '+dst
 
-    (LC,LD) = diffBackup.mainDiffBackup(src,dstt,ignoreList)
 
     # print 'Main'
     # print LC
