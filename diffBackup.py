@@ -7,7 +7,7 @@ import time
 import shutil
 import copyFiles
 
-# generate dictionaries for src and dst files. {FilePath : Modification Time}
+# generate dictionaries for src and dst files. {FilePath : Modification Time}, because we only replace files.
 # generate dictionaries for src and dst directories. {FilePath : 1}. Needed because we may have to delete a folder altogether if it has been deleted from the src.
 # But we can't do this solely on the basis of size=0 of dst, as the folder may be of size=0 in the src too. Hence keep track of src folders too. Just see the folder exists in the src as well.
 # mtime is time the file's Contents were last changed (in Unix systems). ctime gives the time the file's metadata was changed.
@@ -16,7 +16,8 @@ import copyFiles
 LC=[]
 LD=[]
 
-#while making src dictionary, make sure to replace the src part with dst. Because we'll be checking if the dst dict item is present in the src dict
+# while making src dictionary, make sure to replace the src part with dst. Because we'll be checking if the dst dict item is present in the src dict
+
 def srcDictGen(src,dst,ignoreList):
 
     srcFilesDict={}
@@ -76,6 +77,7 @@ def dictGen(src,dst,ignoreList):
     srcFilesDict,srcDirsDict=srcDictGen(src,dst,ignoreList)
     # print dst
 
+    #destination src generate
     for root,dirs,files in os.walk(dst):
         for hereFile in files:
             if hereFile[0] == '.':  # hidden files
@@ -150,6 +152,7 @@ def addModFiles(srcFilesDict,dstFilesDict,src,dst):
         print '%s file created' % os.path.basename(hereFile)
 
 # copy the new empty folders. The non empty folders would have been created already
+# as we copy only files
 def addNewEmptyFolders(srcDirsDict,dstDirsDict):
 
     mod = []

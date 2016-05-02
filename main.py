@@ -33,7 +33,7 @@ def Backupnow(L,dst,ignoreList):
     for s in L:
         print s+'\n'
 
-    print 'dst files: '+dst
+    # print 'dst files: '+dst
 
 
     # print 'Main'

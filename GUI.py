@@ -4,6 +4,7 @@ import Tkconstants, tkFileDialog
 import datetime
 import ttk
 import main
+import createISO
 
 dirtext = 'Select your pictures folder'
 filetext = 'Select your exception file'
@@ -67,20 +68,25 @@ def openfile1():
 
 def askd1():
     global dirn
-    dirname = tkFileDialog.askdirectory(parent=root, title=dirtext1)
-    if dirname != "":
-     T2.insert(INSERT, dirname+"\n")
-     dirn += [(dirname)]
+    dirn = tkFileDialog.askdirectory(parent=root, title=dirtext1)
+    if dirn != "":
+      T2.insert(INSERT, dirn+"\n")
+
     # Dest["text"] =str(dirn) if dirn else dirtext
 
 def  DestSelect():
     global dirname2
     dirname2 = tkFileDialog.askdirectory(parent=root, title=dirtext1)
 
+#create iso
+def createf():
+    global dirname2,dirn
+    createISO.isoCreator(dirname2,dirn)
+
 def Callfun():
-    global Ldir,dirname2,ldir1
-    global T,ct,ct1
-    global var1
+    global Ldir,dirname2,ldir1,T,ct,ct1,var1
+    global Ldirignore,dirn,LC,LD
+
     if var1.get()!=None:
         ldir1[var1.get()] = 1
     (LC,LD) = main.Backupnow(Ldir,dirname2,ldir1)
@@ -100,6 +106,16 @@ def Callfun():
     T.delete("1.0",END)
     ct=0
     ct1=0
+
+    # clear everything
+    Ldir = []
+    Ldirignore = []
+    dirn = []
+    ldir1 = {}
+    ct = 0
+    ct1 = 0
+    LC=[]
+    LD=[]
 
 
 root.title('Backup Implementation')
@@ -133,8 +149,13 @@ b2.pack()
 T2 = Text(f4, height=10)
 T2.pack()
 T2.insert(INSERT, "Choose the destination where you want your ISO image to be ceated \n")
-b10 = Button(f4, text="get ISO image", command=askd1)
+
+b10 = Button(f4, text="get destination of ISO image", command=askd1)
 b10.pack()
+
+cre = Button(f4, text="Create ISO image", command=createf)
+cre.pack()
+
 Destdir = Button(f1, text="Select Backup Destination", command=DestSelect)
 Destdir.pack()
 BackupNow = Button(f1, text="Backup Now", command=Callfun)
@@ -166,6 +187,7 @@ b11 = Button(f2, text="Browse directories to ignore", command=askdirectory1)
 b11.pack()
 b21 = Button(f2, text="Browse files to ignore", command=openfile1)
 b21.pack()
+
 
 lst1 = ['None','.pdf', '.txt', '.rtf', '.ppt']
 var1 = StringVar()
