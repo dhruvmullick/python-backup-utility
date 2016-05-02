@@ -5,7 +5,7 @@ A utility to backup files and folders
 
 1. Keep exceptions for backing up
 2. Backup only the modified files
-3. Differential Backup. 
+3. Incremental Backup. 
 4. Create an ISO image after the backup is completed
 5. Support extracting of backup files from ISO image (TO DO)
     
@@ -32,7 +32,7 @@ Moreover, the user has the option to specify a list of :
 that he wishes to ignore. These would not be included in the backup.
 
 
-Differential Backup :  
+Incremental Backup :  
   1. Modified and Added files are copied from source to dest
   2. Deleted files are removed from dest 
 
@@ -50,4 +50,3 @@ Frontend :
 
 
 
-—————————————————————————————————————————————————————
