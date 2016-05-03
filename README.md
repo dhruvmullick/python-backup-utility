@@ -12,6 +12,13 @@ A utility to backup files and folders
 
 __________
 
+System Requirements: 
+----
+
+  1. Unix based system 
+  2. Python >=2.7 
+  3. mkisofs installed (Only if you want to make an ISO image) 
+
 
 
 Backend:
@@ -46,7 +53,7 @@ __________
 Frontend :
 -----------
 
-
+Used Tkinter. 
 
 
 
