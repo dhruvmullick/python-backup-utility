@@ -99,8 +99,10 @@ def Callfun():
     # print LD
     T5.insert(INSERT, "Backup has been created at"+dirname2+" \n at "+str+" on "+str1+"\n")
     T5.insert(INSERT, "Files last backed up are :\n")
+    T5.insert(INSERT, "Copied files are :\n")
     for x in LC:
         T5.insert(INSERT, x + "\n")
+    T5.insert(INSERT, "Deleted files are :\n")
     for x in LD:
         T5.insert(INSERT, x + "\n")
     T.delete("1.0",END)

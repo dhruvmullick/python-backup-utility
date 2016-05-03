@@ -17,4 +17,5 @@ def isoCreator(backupdst,isodstfolder):
     fname = "Backup_%s-%s_%s-%s-%s.iso" %(now.hour,now.minute,now.day,now.month,now.year)   #name of iso image
     isodst=os.path.join(isodstfolder,fname)
     os.system("mkisofs -o '%s' '%s'" %(isodst,backupdst))
-
+#mkisofs is effectively a pre-mastering program to generate an ISO image.
+#mkisofs  [ -o filename ] pathspec [pathspec ...]

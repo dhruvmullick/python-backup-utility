@@ -1,4 +1,0 @@
-void print()
-{
-    cout<<"hello, world";
-}
